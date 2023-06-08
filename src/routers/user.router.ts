@@ -9,20 +9,26 @@ router.get("/", userController.getAll);
 
 router.get(
   "/:id",
-  userMiddleWare.isValidIdOrThrow,
-  userMiddleWare.isIdValid,
+  userMiddleWare.checkIsIdCorrect,
+  userMiddleWare.checkIfUserExists,
   userController.getById
 );
 
-router.post("/", userMiddleWare.create, userController.post);
+router.post("/", userMiddleWare.checkValuesForCreation, userController.create);
 
 router.put(
   "/:id",
-  userMiddleWare.isValidIdOrThrow,
-  userMiddleWare.put,
-  userController.put
+  userMiddleWare.checkIsIdCorrect,
+  userMiddleWare.checkIfUserExists,
+  userMiddleWare.checkValuesForUpdate,
+  userController.update
 );
 
-router.delete("/:id", userMiddleWare.isValidIdOrThrow, userController.delete);
+router.delete(
+  "/:id",
+  userMiddleWare.checkIsIdCorrect,
+  userMiddleWare.checkIfUserExists,
+  userController.delete
+);
 
 export const userRouter = router;

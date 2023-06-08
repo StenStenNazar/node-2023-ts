@@ -24,7 +24,7 @@ class UserController {
       next(e);
     }
   }
-  public async post(
+  public async create(
     req: Request,
     res: Response,
     next: NextFunction
@@ -36,7 +36,7 @@ class UserController {
       next(e);
     }
   }
-  public async put(req: Request, res: Response): Promise<Response<IUser>> {
+  public async update(req: Request, res: Response): Promise<Response<IUser>> {
     const { id } = req.params;
     try {
       const updatedUser = await userService.update(id, req.res.locals as IUser);

@@ -6,7 +6,7 @@ import { User } from "../models/User.model";
 import { UserValidator } from "../validators/user.validator";
 
 class UserMiddlewares {
-  public async isValidIdOrThrow(
+  public async checkIsIdCorrect(
     req: Request,
     res: Response,
     next: NextFunction
@@ -23,7 +23,7 @@ class UserMiddlewares {
     }
   }
 
-  public async isIdValid(
+  public async checkIfUserExists(
     req: Request,
     res: Response,
     next: NextFunction
@@ -40,7 +40,7 @@ class UserMiddlewares {
     }
   }
 
-  public async create(
+  public async checkValuesForCreation(
     req: Request,
     res: Response,
     next: NextFunction
@@ -57,7 +57,7 @@ class UserMiddlewares {
     }
   }
 
-  public async put(
+  public async checkValuesForUpdate(
     req: Request,
     res: Response,
     next: NextFunction
