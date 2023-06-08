@@ -1,22 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 
-import { ApiError } from "../errors/api.errors";
 import { IUser } from "../interfaces/user.interface";
-import { User } from "../models/User.model";
-import { UserValidator } from "../validators/user.validator";
+import { userService } from "../services/user.service";
 
 class UserController {
-  public async getAll(req: Request, res: Response): Promise<Response<IUser[]>> {
+  public async getAll(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response<IUser[]>> {
     try {
-      const users = await User.find({});
+      const users = await userService.findAll();
       return res.json(users);
     } catch (e) {
-      console.log(e);
+      next(e);
     }
   }
   public async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await User.findById(req.params.id);
+      const user = await userService.findById(req.res.locals.id);
       return res.json(user);
     } catch (e) {
       next(e);
@@ -28,11 +30,7 @@ class UserController {
     next: NextFunction
   ): Promise<Response<IUser>> {
     try {
-      const { error, value } = UserValidator.create.validate(req.body);
-      if (error) {
-        throw new ApiError(error.message, 400);
-      }
-      const createdUser = await User.create(value);
+      const createdUser = await userService.create(req.res.locals as IUser);
       return res.status(201).json(createdUser);
     } catch (e) {
       next(e);
@@ -41,15 +39,7 @@ class UserController {
   public async put(req: Request, res: Response): Promise<Response<IUser>> {
     const { id } = req.params;
     try {
-      const { error, value } = UserValidator.update.validate(req.body);
-      if (error) {
-        throw new ApiError(error.message, 400);
-      }
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: id },
-        { ...value },
-        { returnDocument: "after" }
-      );
+      const updatedUser = await userService.update(id, req.res.locals as IUser);
       return res.status(200).json(updatedUser);
     } catch (e) {
       console.log(e);
@@ -57,8 +47,7 @@ class UserController {
   }
   public async delete(req: Request, res: Response): Promise<Response<void>> {
     try {
-      const { id } = req.params;
-      await User.deleteOne({ _id: id });
+      await userService.delete(req.res.locals.id as string);
       return res.sendStatus(200);
     } catch (e) {
       console.log(e);

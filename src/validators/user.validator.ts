@@ -8,7 +8,6 @@ export class UserValidator {
   static age = Joi.number().min(1).max(199);
   static gender = Joi.valid(...Object.values(EGenders));
   static email = Joi.string().regex(regexConstants.EMAIL).lowercase().trim();
-
   static password = Joi.string().regex(regexConstants.PASSWORD).trim();
 
   static create = Joi.object({
